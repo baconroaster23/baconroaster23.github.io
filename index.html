@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+  <style>
+    :root {
+      --bg: #020302;
+      --panel: #070b07;
+      --green: #00ff55;
+      --green-dim: #00aa44;
+      --border: rgba(0,255,85,0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Consolas, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: radial-gradient(circle at center, #081208 0%, var(--bg) 65%);
+      color: var(--green);
+      overflow-x: hidden;
+    }
+
+    
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
+
+    
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.75);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    nav .logo { font-weight: bold; }
+
+    nav a {
+      color: var(--green-dim);
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    nav a:hover { color: var(--green); }
+
+    section { padding: 120px 10% 90px; }
+
+    h2 {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero small { opacity: .6; }
+
+    .hero h1 {
+      font-size: 48px;
+      margin: 10px 0;
+      text-shadow: 0 0 25px rgba(0,255,85,.4);
+    }
+
+    .typing::after {
+      content: "_";
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero p {
+      max-width: 600px;
+      color: var(--green-dim);
+      margin-top: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      margin: 20px 6px 0;
+      border: 1px solid var(--border);
+      color: var(--green);
+      text-decoration: none;
+      background: transparent;
+    }
+
+    .btn:hover { background: rgba(0,255,85,.08); }
+
+    
+    .card, .skill-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 18px;
+    }
+
+    .card p { color: var(--green-dim); margin-bottom: 12px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+      gap: 18px;
+    }
+
+    .skill-box ul { list-style: none; font-size: 14px; color: var(--green-dim); }
+    .skill-box li::before { content: "> "; color: var(--green); }
+
+    .contact p { max-width: 600px; color: var(--green-dim); margin-bottom: 16px; }
+
+    footer {
+      text-align: center;
+      padding: 40px 10px;
+      border-top: 1px solid var(--border);
+      color: var(--green-dim);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<nav>
+  <div class="logo">>_ CLDevs</div>
+  <div>
+    <a href="#about">./about</a>
+    <a href="#skills">./skills</a>
+    <a href="#contact">./contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <small id="boot"></small>
+  <h1 class="typing" id="title"></h1>
+  <p id="subtitle"></p>
+  <a class="btn" href="https://github.com/baconroaster23" target="_blank">GitHub</a>
+</section>
+
+<section id="about">
+  <h2>01. About Me</h2>
+  <div class="card">
+    <p>I'm a 16-year-old developer passionate about understanding software at its core.</p>
+    <p>Focused on reverse engineering, low-level systems, and game research.</p>
+    <p>Driven by curiosity, learning, and experimentation.</p>
+    <p>> Best partner and collaborator: <strong>@Pasted0</strong></p>
+  </div>
+</section>
+
+<section id="skills">
+  <h2>02. Skills</h2>
+  <div class="grid">
+    <div class="skill-box"><h3>&lt;/&gt; Programming</h3><ul><li>C++</li><li>C#</li><li>C</li><li>Bash</li></ul></div>
+    <div class="skill-box"><h3>Systems</h3><ul><li>Windows Internals</li><li>Linux</li><li>.NET Runtime</li><li>Virtualization</li></ul></div>
+    <div class="skill-box"><h3>Reverse Engineering</h3><ul><li>Static & Dynamic</li><li>Memory Analysis</li><li>Binary Patching</li><li>x86/x64</li></ul></div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <h2>04. Get In Touch</h2>
+  <p>Whether you want to collaborate, discuss RE, or just talk tech—reach out.</p>
+  <a class="btn" href="https://github.com/baconroaster23" target="_blank">GitHub</a>
+</section>
+
+<footer>
+  <p>> Built with curiosity ☠️</p>
+  <p>© 2026 <strong>CLDevs Softworks</strong></p>
+</footer>
+
+<script>
+
+const bootText = "> initializing profile...";
+const titleText = "CLDevs Softworks";
+const subText = "16 y/o developer focused on software, reverse engineering, and game research.";
+
+let i = 0;
+function type(el, text, speed, cb) {
+  if (i < text.length) {
+    el.textContent += text[i++];
+    setTimeout(() => type(el, text, speed, cb), speed);
+  } else { i = 0; cb && cb(); }
+}
+
+type(document.getElementById('boot'), bootText, 40, () => {
+  type(document.getElementById('title'), titleText, 70, () => {
+    type(document.getElementById('subtitle'), subText, 25);
+  });
+});
+
+
+const c = document.getElementById('matrix');
+const ctx = c.getContext('2d');
+c.width = innerWidth; c.height = innerHeight;
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const fontSize = 14;
+const columns = c.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle = '#00ff55';
+  ctx.font = fontSize + 'px monospace';
+  drops.forEach((y,i)=>{
+    const text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, y*fontSize);
+    if (y*fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+}
+setInterval(draw, 40);
+
+window.onresize = () => { c.width = innerWidth; c.height = innerHeight; };
+</script>
+
+</body>
+</html>
